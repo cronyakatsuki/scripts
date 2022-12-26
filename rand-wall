@@ -1,0 +1,27 @@
+#!/bin/env python3
+
+from os import listdir
+from os.path import isfile, join
+from random import choice
+from subprocess import call
+from os.path import expanduser
+from sys import exit
+
+def set_random_wallapper(wallpapers, path):
+    wallpaper = choice(wallpapers)
+    call(['xwallpaper', '--stretch', join(path, wallpaper)])
+    wallpapers.pop(wallpapers.index(wallpaper))
+
+def get_list_of_wallpapers(path):
+    return [f for f in listdir(path) if isfile(join(path, f))]
+
+def main():
+    path=expanduser("~/pics/wallpapers")
+
+    wallpapers = get_list_of_wallpapers(path)
+
+    set_random_wallapper(wallpapers, path)
+    exit()
+
+if __name__ == '__main__':
+    main()

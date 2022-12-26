@@ -1,0 +1,10 @@
+#!/bin/bash
+# Restarts a program
+
+[ -z "$1" ] && exit 1
+
+ID=$(pgrep "$1")
+
+kill -9 $ID
+$@ &>/dev/null & disown
+quick-notify "Program Restarter" "$1 restarted"

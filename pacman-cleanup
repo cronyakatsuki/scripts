@@ -1,0 +1,4 @@
+#!/bin/sh
+
+/usr/bin/paccache -ruk1
+/usr/bin/paccache -rk2

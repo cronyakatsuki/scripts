@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# script to notify me of a finished torrent
+
+quick-notify "Transmission Daemon" "Your torrent ${TR_TORRENT_NAME} has been downloaded"

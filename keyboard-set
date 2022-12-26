@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# Because of my regular non american laptop onboard keyboard layout and american externals one this is my hack to use both for dedicated device.
+
+ids=$(xinput | grep "SEMICO USB Keyboard" | grep "keyboard" | cut -d '=' -f 2 | cut -f 1)
+
+for id in $ids; do
+    setxkbmap -device $id -layout us -option caps:escape
+done

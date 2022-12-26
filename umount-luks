@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# unmount the decrypted drive and close/encypt it again
+sudo umount /dev/mapper/luks
+sudo cryptsetup luksClose luks

@@ -1,0 +1,78 @@
+#!/bin/env python3
+
+import requests
+import string
+import random
+import os
+import queue
+from threading import Thread
+
+def wall_search_api():
+    config = {}
+    if os.path.exists(os.path.expanduser("~/.config/walls/config.json")):
+        configExists = True
+        config_content = open(os.path.expanduser("~/.config/walls/config.json")).read()
+        config = eval(config_content)
+    else:
+        configExists = False
+
+    url = "https://wallhaven.cc/api/v1/search"
+
+    if configExists and config['apikey']:
+        url += f"?apikey={config['apikey']}"
+
+    if configExists and config['categories']:
+        url += f"&categories={config['categories']}"
+
+    if configExists and config['purity']:
+        url += f"&purity={config['purity']}"
+
+    if configExists and config['sorting']:
+        url += f"&sorting={config['sorting']}"
+
+    if configExists and config['topRang']:
+        url += f"&topRang={config['topRang']}"
+
+    if configExists and config['atleast']:
+        url += f"&atleast={config['atleast']}"
+
+    if configExists and config['ratios']:
+        url += f"&ratios={config['ratios']}"
+
+    print(url)
+
+    res = requests.get(url)
+    json_data = res.json()
+    dl_links = queue.Queue()
+    for wallpaper in json_data["data"]:
+        dl_links.put(wallpaper["path"])
+
+    return dl_links
+
+def generate_id():
+    return ''.join(random.choices(string.ascii_lowercase+string.digits, k=6))
+
+def down_wall(path, queue):
+    while not queue.empty():
+        url = queue.get(block = False)
+
+        print(f"Downloading... {url}")
+        res = requests.get(url)
+        queue.task_done()
+
+        wall_name = generate_id()
+        ext = os.path.splitext(url)[1]
+        dl_path = f"{path}{wall_name}{ext}"
+        open(dl_path, 'wb').write(res.content)
+
+wall_dl_urls =  wall_search_api()
+
+
+threads = []
+for i in range(20):
+    t = Thread(target = down_wall,
+               args = ("/home/crony/pics/wall_dl/", wall_dl_urls))
+    threads.append(t)
+    t.start()
+
+wall_dl_urls.join()

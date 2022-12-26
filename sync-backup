@@ -1,0 +1,39 @@
+#!/bin/env bash
+
+set -euo pipefail
+
+read -sp "Password: " password
+
+# get the drive path
+drive="$1"
+
+printf '\n%s\n\n' "Opening encrypted drive"
+
+# open the encrypted drive
+sudo cryptsetup luksOpen $drive luks
+
+printf '\n%s\n\n' "Mounting encrypted drive"
+
+# check if the /mnt/encrypted directory exists if not create it
+[ -d "/mnt/encrypted/" ] || printf '%s\n' "$password" | sudo -S mkdir -p /mnt/encrypted
+
+# mount the decrypted drive to /mnt/encrypted/ directory
+printf '%s\n' "$password" | sudo -S mount /dev/mapper/luks /mnt/encrypted
+
+# Here comes the fun part
+
+# Using a list to backup all my shit
+
+while read Line; do
+  echo "Syncing $(basename $line)"
+  rsync -ahAX -v --delete "$Line" $HOME/.local/backup
+done <<< "$(cat $HOME/.config/rsync/backup-list)"
+
+printf '\n%s\n\n' "Unmounting encrypted drive"
+
+# unmount the decrypted drive and close/encypt it again
+printf '%s\n' "$password" | sudo -S umount /dev/mapper/luks
+
+printf '\n%s\n\n' "Closing encrypted drive"
+
+printf '%s\n' "$password" | sudo -S cryptsetup luksClose luks

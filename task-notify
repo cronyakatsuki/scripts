@@ -1,0 +1,8 @@
+#!/bin/bash
+
+tasks=$(task status:pending -notified due export | jq -r '.[].description')
+[ -z "$tasks" ] && exit 0
+for task in $tasks; do
+  notify-send 'A task is due.' "$task"
+done
+task status:pending -notified due modify +notified

@@ -1,0 +1,5 @@
+#!/bin/sh
+
+current_dir=$(pwd)
+cd $HOME/docs/vimwiki
+nvim index.md

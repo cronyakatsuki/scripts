@@ -1,0 +1,33 @@
+#!/bin/bash
+
+function args(){
+    local OPTIND opt i
+    while getopts ":fxc:" opt; do
+        case $opt in
+            f) full=true;;
+            x) exact=true;;
+            c) class="$OPTARG";;
+        esac
+    done
+    shift $((OPTIND - 1))
+
+    if [ $full ]; then
+        ID=$(pgrep -f $1)
+    elif [ $exact ]; then
+        ID=$(pgrep -x $1)
+    elif [ ! $class = "" ]; then
+        ID=$(pgrep $class)
+    else
+        ID=$(pgrep $1)
+    fi
+}
+
+function main () {
+    args $@
+
+    if [ ! -z "$ID" ]; then
+        kill -9 $ID
+    fi
+}
+
+main $@

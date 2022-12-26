@@ -1,0 +1,12 @@
+#!/bin/sh
+
+for i in *.7z
+do
+  tmpdir=$( basename "${i}" .7z )
+  mkdir "${tmpdir}" && cd "${tmpdir}"
+  7z x "../${i}"
+  zip -r "../${tmpdir}.zip" * .[^.]*
+  cd ..
+  rm -rf  "${tmpdir}"
+  rm "${i}"
+done

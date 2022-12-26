@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# get the drive path
+drive="$1"
+
+# open the encrypted drive
+sudo cryptsetup luksOpen $drive luks
+
+# check if the /mnt/encrypted directory exists if not create it
+[ -d "/mnt/encrypted/" ] || sudo mkdir -p /mnt/encrypted
+
+# mount the decrypted drive to /mnt/encrypted/ directory
+sudo mount /dev/mapper/luks /mnt/encrypted

@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# Script to get anime game's wish history link for paimon.moe
+
+
+if [ $XDG_SESSION_TYPE = "wayland" ];
+    if cat -v ".local/share/anime-game-launcher/game/drive_c/Program Files/Genshin Impact/GenshinImpact_Data/webCaches/Cache/Cache_Data/data_2" | grep -m 1 "e20190909gacha-v2"  | sed 's/1\/0\//\n/g' | grep "e20190909gacha-v2" | sed 's/global.*/global/' | wl-copy -n ; then
+        quick-notify "Copied wish link"
+    else
+        quick-notify "Failed to copy"
+    fi
+else
+    if cat -v ".local/share/anime-game-launcher/game/drive_c/Program Files/Genshin Impact/GenshinImpact_Data/webCaches/Cache/Cache_Data/data_2" | grep -m 1 "e20190909gacha-v2"  | sed 's/1\/0\//\n/g' | grep "e20190909gacha-v2" | sed 's/global.*/global/' | xclip -sel c ; then
+        quick-notify "Copied wish link"
+    else
+        quick-notify "Failed to copy"
+    fi
+fi

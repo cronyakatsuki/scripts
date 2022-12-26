@@ -1,0 +1,4 @@
+#!/bin/bash
+# Start a program nicely
+
+$@ &>/dev/null & disown

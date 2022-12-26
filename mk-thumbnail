@@ -1,0 +1,24 @@
+#!/bin/sh
+
+File="$1"
+Logo="$2"
+FileBlured="${File%.*}-blured.jpg"
+FileBorder="${File%.*}-border.jpg"
+FileLogo="${File%.*}-logo.jpg"
+
+printf '%s\n' "adding blur to image"
+convert -blur 0x3 "$File" "$FileBlured"
+rm $File
+mv $FileBlured $File
+
+printf '%s\n' "adding border to image"
+convert -bordercolor "#3BB2D7" -border 40 "$File" "$FileBorder"
+rm $File
+mv $FileBorder $File
+
+printf '%s\n' "adding logo to image"
+convert "$File" "$Logo" -gravity SouthWest -geometry 150x150+40+40 -composite "$FileLogo"
+rm $File
+mv $FileLogo $File
+
+printf '%s\n' "Thumbnail created be happy ;)"
