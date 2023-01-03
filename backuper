@@ -1,0 +1,20 @@
+#!/bin/env bash
+
+copy () {
+  while read Line; do
+    echo "Syncing $(basename $Line)"
+    rsync -ahAX -v --delete "$Line" $HOME/.local/backup
+  done <<< "$(cat $HOME/.config/rsync/backup-list)"
+}
+
+encrypt () {
+  x=$(date +%d.%m.%y)
+  cd "$HOME/.local"
+  tar cv -I"zstd -19 -T0" -f "$HOME/.local/cloud/backup-$x.tar.zst" "backup"
+  gpg -c --no-symkey-cache --cipher-algo AES256 -o "$HOME/.local/cloud/backup-$x.tar.zst.gpg" "$HOME/.local/cloud/backup-$x.tar.zst"
+  shred -uzn3 "$HOME/.local/cloud/backup-$x.tar.zst"
+}
+
+[ -z "$@" ] && exit 1
+[ "$1" = "copy" ] && copy
+[ "$1" = "encrypt" ] && encrypt
