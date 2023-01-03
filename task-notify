@@ -5,4 +5,4 @@ tasks=$(task status:pending -notified due export | jq -r '.[].description')
 for task in $tasks; do
   notify-send 'A task is due.' "$task"
 done
-task status:pending -notified due modify +notified
+task rc.bulk=0 rc.confirmation=off status:pending -notified due modify +notified
