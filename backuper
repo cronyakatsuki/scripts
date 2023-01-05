@@ -4,7 +4,7 @@ copy () {
   while read Line; do
     echo "Syncing $(basename $Line)"
     rsync -ahAX -v --delete "$Line" $HOME/.local/backup
-  done <<< "$(cat $HOME/.config/rsync/backup-list)"
+  done <<< "$(cat $HOME/.config/rsync/sync-list)"
 }
 
 encrypt () {

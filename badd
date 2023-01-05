@@ -3,4 +3,4 @@
 # Simple buku script to quickly add a url and edit it right away in a floating terminal.
 
 xclip -sel c -o | buku -a
-$TERMINAL start --class badd  -- buku -w -1
+$TERMINAL --class badd -e buku -w -1
