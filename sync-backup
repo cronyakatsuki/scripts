@@ -25,7 +25,7 @@ printf '%s\n' "$password" | sudo -S mount /dev/mapper/luks /mnt/encrypted
 # Using a list to backup all my shit
 
 while read Line; do
-  echo "Syncing $(basename $line)"
+  echo "Syncing $(basename $Line)"
   rsync -ahAX -v --delete "$Line" $HOME/.local/backup
 done <<< "$(cat $HOME/.config/rsync/backup-list)"
 
